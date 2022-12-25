@@ -92,7 +92,7 @@ public class StockService implements StockServive {
 
 	@Override
 	public String closeStock(StockDto stock) {
-		if((stock.getStatus().equals(Status.CLOSED) && !stockRepo.existsByIdAndStatus(stock.getId(),stock.getStatus()))||stock.getStatus().equals(Status.CANCELED)) {
+		if(!stockRepo.existsByIdAndStatus(stock.getId(),stock.getStatus())) {
 			inventoryId.setStockid(stock.getId());
 			inventoryId.setStatus(Status.OPENED);
 			try {
@@ -103,23 +103,15 @@ public class StockService implements StockServive {
 				stock.setColosingdate(varList.getSYSDATE());
 				stock.setStatus(stock.getStatus());
 				stockRepo.save(modelMapper.map(stock, Stock.class));
-				if ((stock.getStatus().equals(Status.CLOSED))) {
-					try {
-						inventoryService.coloseInventory(inventoryId);
-						return VarList.RSP_SUCCESS;
-					} catch (Exception e) {
-						System.out.println(e.getMessage());
-						return VarList.RSP_ERROR;
-					}
-				}else {
-					try {
-						inventoryService.cancelInventory(inventoryId);
-						return VarList.RSP_SUCCESS;
-					} catch (Exception e) {
-						System.out.println(e.getMessage());
-						return VarList.RSP_ERROR;
-					}
+				
+				try {
+					inventoryService.coloseInventory(inventoryId);
+					return VarList.RSP_SUCCESS;
+				} catch (Exception e) {
+					System.out.println(e.getMessage());
+					return VarList.RSP_ERROR;
 				}
+				
 				
 			}catch(Exception e) {
 				System.out.println(e.getMessage());

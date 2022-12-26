@@ -8,32 +8,30 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @Component
-public class URLReader {
+public class SMSApi {
+	
 	@Value("${SMSID}")
 	private String smsid;
 	@Value("${SMSPASSWORD}")
 	private String smspassword;
-	
 	private String res;
 	private String resa[]; 
 	private String inputLine; 
+	
 	public String sendSMS(String text,String receiver) throws Exception {
 		
 		URL textit = new URL("http://textit.biz/sendmsg/index.php?id="+smsid+"&pw="+smspassword+"&to="+ receiver +"&text="+text);
 		BufferedReader in = new BufferedReader(
 		new InputStreamReader(textit.openStream()));
-		
-//		 "OK:1-MSG_GSM-2 Uploaded_Successfully";
 		while ((inputLine = in.readLine()) != null)
 		res = inputLine;
 		in.close();
-		
-		System.out.println(res);
 		resa = res.split(":");
-		if (resa[0] == "OK"){
-				System.out.println(inputLine);
+		if (resa[0].equals("OK")){
+			return VarList.RSP_SUCCESS;
+		}else {
+			return VarList.RSP_ERROR;
 		}
-		return inputLine;
 	}
 
 }

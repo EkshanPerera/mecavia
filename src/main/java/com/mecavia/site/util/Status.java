@@ -10,7 +10,10 @@ public enum Status {
 	CANCELED("STATUS_CANCELED"),
 	RETURN("STATUS_RETURN"),
 	OPENED("STATUS_OPEND"),
-	CLOSED("STATUS_CLOSED");
+	CLOSED("STATUS_CLOSED"),
+	DELEVERED("STAUS_DELIVERED"),
+	FAILD("STAUS_FAILD"),
+	ERROR("STATUS_ERROR");
 	@Getter  private final  String status; 
 	Status(String status){
 		 this.status = status;

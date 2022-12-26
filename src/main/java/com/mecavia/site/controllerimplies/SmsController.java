@@ -15,7 +15,7 @@ import com.mecavia.site.util.VarList;
 @RestController
 @CrossOrigin
 @RequestMapping
-public class SmsController implements com.mecavia.site.controller.SmsController {
+public class SMSController implements com.mecavia.site.controller.SMSController {
 	@Autowired
 	private SMSService smsService;
 	
@@ -26,14 +26,21 @@ public class SmsController implements com.mecavia.site.controller.SmsController 
 	public ResponseEntity<ResponseDto> sendSMS(SMSDto smsDto) {
 		try {
 			String res = smsService.sendSMS(smsDto);
-			responseDto.setCode(VarList.RSP_SUCCESS);
-			responseDto.setMessage("success");
-			responseDto.setContent(res);
-			return new ResponseEntity<ResponseDto>(responseDto,HttpStatus.ACCEPTED);
+			if(res == "00") {
+				responseDto.setCode(VarList.RSP_SUCCESS);
+				responseDto.setMessage("success");
+				responseDto.setContent(smsDto);
+				return new ResponseEntity<ResponseDto>(responseDto,HttpStatus.ACCEPTED);
+			}else { 
+				responseDto.setCode(VarList.RSP_ERROR);
+				responseDto.setMessage("error");
+				responseDto.setContent(smsDto);
+				return new ResponseEntity<ResponseDto>(responseDto,HttpStatus.EXPECTATION_FAILED);
+			}
 		} catch (Exception e) {
 			responseDto.setCode(VarList.RSP_ERROR);
 			responseDto.setMessage("Error");
-			responseDto.setContent(e);
+			responseDto.setContent(e.getMessage());
 			return new ResponseEntity<ResponseDto>(responseDto,HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		
